@@ -21,6 +21,7 @@ def clientThread(client):
     except:
         print("Something went wrong while setting the nickname for {}!".format(address))
         del addresses[client]
+        client.close()
         return
     print("{} set its nickname to {}!".format(address, user))
     users[client] = user
@@ -30,17 +31,19 @@ def clientThread(client):
         print("Communication error with {} ({}).".format(address, user))
         del addresses[client]
         del users[client]
+        client.close()
         return
     broadcast("{} has joined the chat room!".format(user))
+
     # Handles specific messages in a different way (user commands)
     while True:
         try:
             message = client.recv(bufferSize).decode("utf8")
             if message == "/quit":
                 client.send("You left the chat!".encode("utf8"))
-                client.close()
                 del addresses[client]
                 del users[client]
+                client.close()
                 print("{} ({}) has left.".format(address, user))
                 broadcast("{} has left the chat.".format(user))
                 break
@@ -53,10 +56,10 @@ def clientThread(client):
                 print("{} ({}): {}".format(address, user, message))
                 broadcast(message, user)
         except:
-            print("{} ({}) has quit.".format(address, user))
-            client.close()
+            print("{} ({}) has left.".format(address, user))
             del addresses[client]
             del users[client]
+            client.close()
             broadcast("{} has left the chat.".format(user))
             break
 
@@ -86,6 +89,16 @@ def broadcast(message, sentBy = ""):
     except:
         print("Something went wrong while broadcasting a message!")
 
+def cleanup():
+    # Closes all socket object connections
+    if len(addresses) != 0:
+        for address in addresses:
+            address[0].close()
+            del(addresses[address])
+            if address in users:
+                del(users[address])
+    print("Cleanup done.")
+
 
 # Dictionaries of nicknames and addresses with socket object as key
 users = {}
@@ -96,22 +109,25 @@ socketFamily = socket.AF_INET
 socketType = socket.SOCK_STREAM
 serverSocket = socket.socket(socketFamily, socketType)
 # The host and port for the chat service
-host = "localhost"
+host = ""
 port = 25000
 # The buffer size for the recv() method
 bufferSize = 2048
-# Binds the serverSocket locally at the specified port number
+# Binds the serverSocket at the specified port number
 serverSocket.bind((host, port))
 # Listens for up to 10 active connections
 serverSocket.listen(10)
 # Welcome message to the server owner
 print("pyChat server is up and running!")
-print("Listening for new connections.")
+print("Listening for new connections on port {}.".format(port))
 
 # Creates a thread for accepting incoming connections
 connectionThread = Thread(target=connectionThread)
 connectionThread.start()
 # Waits for it to end and then closes the socket
 connectionThread.join()
+# Performs some connection and resources cleanup
+cleanup()
+# Closes the server socket object connection
 serverSocket.close()
 print("Server has shut down.")
