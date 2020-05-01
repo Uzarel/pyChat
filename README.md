@@ -5,7 +5,7 @@ Yet another TCP chat application written in Python
 pyChat is a simple TCP multi-client chat application powered by the standard Python socket library.
 
 ## Features
-  - User commands (`/help`, `/online` and `/quit`)
+ - User commands (`/help`, `/online` and `/quit`)
  - CLI for both server and client application
  - Multiple client support
 
@@ -45,44 +45,15 @@ As for `pyChat-server.py`, the whole code logic for `pyChat-client.py` is pretty
 The following diagrams show the logic behind the socket API implementation:
 
 1. Sockets setup and connection handling
-```mermaid
-graph TB
-subgraph Server
-bind--Binds the socket to a specific address-->listen
-listen--Enables accepting connections-->accept
-end
-subgraph Client
-connect-.Connects to the server socket.->accept
-end
-```
+![diagram1](img/diagram1.svg)
 
 2. Handling sending and receiving messages between server and client
-```mermaid
-graph TB
-subgraph Server
-serverSend
-serverRecv
-end
-subgraph Client
-clientRecv
-clientSend
-end
-serverSend-.Sends data to the client.->clientRecv
-clientSend-.Sends data to the server.->serverRecv
-```
+![diagram2](img/diagram2.svg)
 
 3. Closing the connection
-```mermaid
-graph TB
-subgraph Server
-serverRecv--Closes the socket-->serverClose
-end
-subgraph Client
-clientClose
-end
-clientClose-.End Of File.->serverRecv
-```
-*N.B. Dashed lines mean that data are sent remotely*
+![diagram3](img/diagram3.svg)
+
+Diagrams were made with [Mermaid](https://mermaid-js.github.io/).
 
 ## Troubleshooting
 ### Port forwarding
@@ -94,7 +65,7 @@ This technique (which is a NAT application) goes under the name of **port forwar
 2.  Navigate to your routers  **port forwarding**/**port mapping**  section;
 3.  Create the port forward entries in your router.
 
-![Port forwarding](https://lh6.googleusercontent.com/GhJ80kpuvFzJcAhAOT8ZOhE3viQDK9NqkYfdQb_dRyqnhjtOHOz3actTy97FPRz-Ky9wE9YgJhLNe-ZDnFR1vfzWEXXiXe-3Yi0bS0MBu2DehmZgpoHmUcAcE7iF3nQKFUEt0hhrOfc)
+![Port forwarding](img/portforwarding.png)
 
 ## Known bugs
 
