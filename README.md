@@ -51,9 +51,10 @@ The following diagrams show the logic behind the socket API implementation:
 ![diagram2](img/diagram2.svg)
 
 3. Closing the connection
+
 ![diagram3](img/diagram3.svg)
 
-Diagrams were made with [Mermaid](https://mermaid-js.github.io/).
+Diagrams were made with [Mermaid](https://mermaid-js.github.io/mermaid/).
 
 ## Troubleshooting
 ### Port forwarding
