@@ -109,8 +109,8 @@ def main():
     serverSocket = socket.socket(socketFamily, socketType)
     # Binds the serverSocket at the specified port number
     serverSocket.bind((host, port))
-    # Listens for up to 10 active connections
-    serverSocket.listen(10)
+    # Enables accepting connections
+    serverSocket.listen()
     # Welcome message to the server owner
     print("pyChat server is up and running!")
     print("Listening for new connections on port {}.".format(port))

@@ -41,6 +41,49 @@ As for `pyChat-server.py`, the whole code logic for `pyChat-client.py` is pretty
  2. [`send(sock)`](https://github.com/Uzarel/pyChat/blob/master/pyChat-client.py#L20) always waits for a user prompt, stores it, removes its log from the console to avoid echoing (see [`deleteLastLine()`](https://github.com/Uzarel/pyChat/blob/master/pyChat-client.py#L13)) and then sends it to the server;
  3. [`receive(sock)`](https://github.com/Uzarel/pyChat/blob/master/pyChat-client.py#L31) always waits for upcoming messages from the server and prints them upon reception along with the timestamp (see [`currentTime()`](https://github.com/Uzarel/pyChat/blob/master/pyChat-client.py#L7)).
 
+## Client-server socket logic
+The following diagrams show the logic behind the socket API implementation:
+
+1. Sockets setup and connection handling
+```mermaid
+graph TB
+subgraph Server
+bind--Binds the socket to a specific address-->listen
+listen--Enables accepting connections-->accept
+end
+subgraph Client
+connect-.Connects to the server socket.->accept
+end
+```
+
+2. Handling sending and receiving messages between server and client
+```mermaid
+graph TB
+subgraph Server
+serverSend
+serverRecv
+end
+subgraph Client
+clientRecv
+clientSend
+end
+serverSend-.Sends data to the client.->clientRecv
+clientSend-.Sends data to the server.->serverRecv
+```
+
+3. Closing the connection
+```mermaid
+graph TB
+subgraph Server
+serverRecv--Closes the socket-->serverClose
+end
+subgraph Client
+clientClose
+end
+clientClose-.End Of File.->serverRecv
+```
+*N.B. Dashed lines mean that data are sent remotely*
+
 ## Troubleshooting
 ### Port forwarding
 In order for the server-side application to work on most networks, you may want to redirect the communication requests from your public address and port number combination to your local address within your LAN and port number combination which represent the pyChat service running on your computer.
