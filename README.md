@@ -61,21 +61,18 @@ Diagrams were made with [Mermaid](https://mermaid-js.github.io/mermaid/).
 ## Debug
 The following [Wireshark](https://www.wireshark.org/) logs have been taken on a terminal running `pyChat-server.py` while capturing TCP packets on port `25000` (the default port used by pyChat) to check if the socket side of the application works correctly:
 
- 1. Client connects to the server
-A client starts `pyChat-client.py` and establish a connection to the server:
+ 1. Client connects to the server - A client starts `pyChat-client.py` and establish a connection to the server:
 ![3-way handshake](img/3-way-handshake.jpg)
 The socket setup works as expected (3-way handshake) since the structure of the packets captured is the following:
      1. SYN (Client ---> Server)
      2. SYN-ACK (Server ---> Client)
      3. ACK (Client ---> Server)
- 2. Message broadcasting
-A client sends a message to the server and then the server broadcasts it to everyone:
+ 2. Message broadcasting - A client sends a message to the server and then the server broadcasts it to everyone:
  ![broadcast](img/broadcast.jpg)
  The socket works as expected since the structure of the packets captured is the following:
       1. PSH-ACK (Client ---> Server)
       2. PSH-ACK (Server ---> Client)
- 3. Client disconnects
-Client sends a `/quit` message, the server closes the socket on its side and then the client does the same on its side:
+ 3. Client disconnects - A client sends a `/quit` message, the server closes the socket on its side and then the client does the same:
 ![4-way handshake](img/4-way-handshake.jpg)
 The socket teardown also works as expected (4-way handshake) as the structure of the packets captured is the following:
      1. FIN (Server ---> Client)
